@@ -45,7 +45,7 @@ app.route('/')
         if(result == undefined)
             res.send(`Could not create Shortened Url for <br>${url}`)
         else{
-            data.shortenedURL = currURL + "/q/" + result
+            data.shortenedURL = currURL + "q/" + result
             res.json(data)
         }
     })
