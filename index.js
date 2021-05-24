@@ -2,18 +2,12 @@
  * Globals
  */
 const PORT = process.env.PORT || 5000
-
-const urls = [
-    {
-        "url": "https://i.natgeofe.com/n/4f5aaece-3300-41a4-b2a8-ed2708a0a27c/domestic-dog_thumb.jpg"
-    }
-]
+require('dotenv').config()
+const cors = require('cors')
 
 /**
  * Express App
  */
-require('dotenv').config()
-const cors = require('cors')
 
 const express = require('express')
 const app = express()
@@ -24,8 +18,9 @@ app.listen(PORT, ()=>{
     console.log(`Server Open at PORT: ${PORT}`)
 })
 
-const {auth} = require('./database/config.database')
-const { System, insert, findThis } = require('./database/CRUD.database')
+const { auth } = require('./database/config.database')
+const { insert, findThis } = require('./database/CRUD.database')
+
 /**
  * Routes
  */
@@ -41,6 +36,8 @@ app.route('/')
         }
     })
     .post(async (req, res)=>{
+        const currURL = req.protocol + '://' + req.get('host') + req.originalUrl
+
         const data = req.body
         const url = data.url
         const result = await insert(url)
@@ -48,12 +45,12 @@ app.route('/')
         if(result == undefined)
             res.send(`Could not create Shortened Url for <br>${url}`)
         else{
-            data.shortenedURL = 'http://localhost:5000/' + result
+            data.shortenedURL = currURL + "/q/" + result
             res.json(data)
         }
     })
 
-app.route('/:id')
+app.route('/q/:id')
     .get(async (req, res)=>{
         const service = await findThis(req.params.id)
         if(service == undefined)
