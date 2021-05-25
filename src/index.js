@@ -5,7 +5,7 @@ const ERROR_CREATION = 1
 const ERROR_INVALID_URL = 2 
 
 const validURL = (url)=>{
-   let regex = RegExp('^(ftp|https?)://+(www.)?[a-z0-9-.]{3,}.[a-z]{2,}//?$', 'g')
+   let regex = RegExp('^(ftp|https?)://', 'g')
    return regex.exec(url)
 }
 
