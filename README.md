@@ -17,12 +17,17 @@ If using localmachine, use [localhost](http://localhost:5000/)
 * `POST https://ctlnk.herokuapp.com/`
 ```
     {
-      url: '<URL to be shortened>'
+      url: '<URL to be shortened>',
+      flavor: '<your endpoint name>' [optional]
     }
 ```
 
 ### ErrorIds
 * 1 ERROR_CREATION
 * 2 ERROR_INVALID_URL
+
+#### My deployed version
+[site](https://chotaurl.vercel.app)
+[github](https://github.com/ayushbasak/chotaurl)
 
 [MIT](LICENSE)

@@ -27,7 +27,7 @@ app.listen(PORT, ()=>{
 })
 
 const { auth } = require('./database/config.database')
-const { insert, findThis } = require('./database/CRUD.database')
+const { insert, insertCheck, findThis } = require('./database/CRUD.database')
 
 /**
  * Routes
@@ -48,6 +48,7 @@ app.route('/')
 
         const data = req.body
         const url = data.url
+        const flavor = data.flavor
         if(url === undefined){
             res.send({errorId: ERROR_INVALID_URL, error: 'Missing URL parameter'})
             return
@@ -56,7 +57,11 @@ app.route('/')
             res.send({errorId: ERROR_INVALID_URL, error: 'Invalid URL'})
             return
         }
-        const result = await insert(url)
+        let result = undefined
+        if(flavor === undefined)
+            result = await insert(url)
+        else
+            result = await insertCheck(url, flavor)
         
         if(result == undefined)
             res.json({errorId: ERROR_CREATION, error: 'Could not create Shortened URL'})
