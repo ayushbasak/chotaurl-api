@@ -1,5 +1,6 @@
 CREATE TABLE URLS(
-    id varchar(10),
-    url varchar(200),
-    primary key(id)
+    id VARCHAR(20),
+    url VARCHAR(400) NOT NULL,
+    epoch BIGINT NOT NULL,
+    PRIMARY KEY(id)
 );
