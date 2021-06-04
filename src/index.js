@@ -66,7 +66,8 @@ app.route('/')
         if(result == undefined)
             res.json({errorId: ERROR_CREATION, error: 'Could not create Shortened URL'})
         else{
-            data.shortenedURL = currURL + "q/" + result
+            data.shortenedURL = currURL + "q/" + result.endpoint
+            data.epoch = result.epoch
             res.json(data)
         }
     })

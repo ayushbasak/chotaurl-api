@@ -6,18 +6,18 @@ const insert = async (url)=>{
     if(Math.floor(Math.random() * 10) === 1)
         await clearPrevious(7)
 
-
+    const currTime = new Date().getTime()
     let newId = Math.random().toString(36).substring(2)
     await urls.create({
         id: newId,
         url: url,
-        epoch: new Date().getTime()
+        epoch: currTime
     })
         .catch(err => {
             console.log(err)
             newId = undefined
         })
-    return newId
+    return {endpoint: newId, epoch: currTime}
 }
 
 const insertCheck = async (url, flavor)=>{
@@ -25,6 +25,7 @@ const insertCheck = async (url, flavor)=>{
     if(Math.floor(Math.random() * 10) === 1)
         await clearPrevious(7)
 
+    const currTime = new Date().getTime()
     const exists = await findThis(flavor);
     if(exists !== undefined)
         return undefined;
@@ -32,13 +33,13 @@ const insertCheck = async (url, flavor)=>{
     await urls.create({
         id: flavor,
         url: url,
-        epoch: new Date().getTime()
+        epoch: currTime
     })
         .catch(err =>{
             console.log(err)
             return undefined
         })
-    return flavor
+    return {endpoint: flavor, epoch: currTime}
 }
 
 const findThis= async (id)=>{
@@ -57,7 +58,7 @@ const clearPrevious = async (days) =>{
     await urls.destroy({
         where: {
             epoch : {
-                [Op.gt] : currTime
+                [Op.lt] : currTime
             }
         }
     })
