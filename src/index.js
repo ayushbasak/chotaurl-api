@@ -27,7 +27,7 @@ app.listen(PORT, ()=>{
 })
 
 const { auth } = require('./database/config.database')
-const { insert, insertCheck, findThis } = require('./database/CRUD.database')
+const { insert, insertCheck, findThis, countAll, getHostNames } = require('./database/CRUD.database')
 
 /**
  * Routes
@@ -80,4 +80,17 @@ app.route('/q/:id')
         else{
             res.redirect(service)
         }
+    })
+
+app.route('/about')
+    .get( async (req, res)=>{
+        let result =await  countAll()
+        let hostNames = await getHostNames()
+        hostNames=  Array.from(hostNames)
+        res.json(
+            {
+                count: result,
+                hostNames: hostNames
+            }
+        )
     })

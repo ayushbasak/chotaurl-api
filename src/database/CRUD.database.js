@@ -65,8 +65,29 @@ const clearPrevious = async (days) =>{
         .then(response => console.log(`deleted`))
 }
 
+const countAll = async ()=>{
+    let count = 0
+    await urls.count()
+        .then(response => count = response)
+        .catch(err => console.log(err))
+    
+    return count
+}
+
+const getHostNames = async ()=>{
+    let hostNames = await urls.findAll()
+    let result = new Set()
+    hostNames.map(curr =>
+        result.add(curr.dataValues.url
+            .split("//")[1].split('/')[0]))
+    console.log(result)
+    return result
+}
+
 module.exports = {
     insert: insert,
     insertCheck: insertCheck,
-    findThis: findThis
+    findThis: findThis,
+    countAll: countAll,
+    getHostNames: getHostNames
 }
