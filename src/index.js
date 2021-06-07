@@ -90,7 +90,8 @@ app.route('/about')
         res.json(
             {
                 count: result,
-                hostNames: hostNames
+                hostNames: hostNames,
+                countHostNames: hostNames.length
             }
         )
     })
