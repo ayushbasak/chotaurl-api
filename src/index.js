@@ -1,8 +1,8 @@
 /**
  * Globals
  */
-const ERROR_CREATION = 1
-const ERROR_INVALID_URL = 2 
+const { ERROR_CREATION, ERROR_INVALID_URL,
+    ERROR_AUTHENTICATION, ERROR_INVALID_USER} = require('./errors/errors')
 
 const validURL = (url)=>{
    let regex = RegExp('^(ftp|https?)://', 'g')
@@ -27,20 +27,28 @@ app.listen(PORT, ()=>{
 })
 
 const { auth } = require('./database/config.database')
-const { insert, insertCheck, findThis, countAll, getHostNames } = require('./database/CRUD.database')
+const { insert, insertCheck, findThis,
+     countAll, getHostNames, deleteAllData } = require('./database/CRUD.database')
 
+const { auth0, config_auth0 } = require('./admin/admin.auth')
+app.use(auth0(config_auth0))
 /**
  * Routes
  */
 
 app.route('/')
-    .get((req, res)=>{
-        if(auth()){
-            console.log(`Database Connected`)
-            res.send('Database Connected')
-        }
+.get((req, res)=>{
+        if(req.oidc.isAuthenticated())
+            res.send('visit /admin')
         else{
-            res.send(`INVALID REQUEST`)
+            // Database Authentication
+            if(auth()){
+                console.log(`Database Connected`)
+                res.send('Database Connected')
+            }
+            else{
+                res.send(`INVALID REQUEST`)
+            }
         }
     })
     .post(async (req, res)=>{
@@ -50,11 +58,11 @@ app.route('/')
         const url = data.url
         const flavor = data.flavor
         if(url === undefined){
-            res.send({errorId: ERROR_INVALID_URL, error: 'Missing URL parameter'})
+            res.send(ERROR_INVALID_URL)
             return
         }
         if(validURL(url) === null){
-            res.send({errorId: ERROR_INVALID_URL, error: 'Invalid URL'})
+            res.send(ERROR_INVALID_URL)
             return
         }
         let result = undefined
@@ -64,7 +72,7 @@ app.route('/')
             result = await insertCheck(url, flavor)
         
         if(result == undefined)
-            res.json({errorId: ERROR_CREATION, error: 'Could not create Shortened URL'})
+            res.json(ERROR_CREATION)
         else{
             data.shortenedURL = currURL + "q/" + result.endpoint
             data.epoch = result.epoch
@@ -76,7 +84,7 @@ app.route('/q/:id')
     .get(async (req, res)=>{
         const service = await findThis(req.params.id)
         if(service == undefined)
-            res.json({errorId: ERROR_INVALID_URL, error: 'Invalid Shortened URL'})
+            res.json(ERROR_INVALID_URL)
         else{
             res.redirect(service)
         }
@@ -94,4 +102,19 @@ app.route('/about')
                 countHostNames: hostNames.length
             }
         )
+    })
+
+app.route('/admin')
+    .get((req, res)=>{
+        if(req.oidc.isAuthenticated()){
+            const user = req.oidc.user.sub.split('|')[1]
+            if (user === process.env.ADMIN){
+                deleteAllData()
+                res.send('deleted all data')
+            }
+            else
+                res.send(ERROR_INVALID_USER)
+        }
+        else
+            res.send(ERROR_AUTHENTICATION)
     })
