@@ -84,10 +84,17 @@ const getHostNames = async ()=>{
     return result
 }
 
+const deleteAllData = async ()=>{
+    await urls.destroy({
+        truncate: true
+    })
+}
+
 module.exports = {
     insert: insert,
     insertCheck: insertCheck,
     findThis: findThis,
     countAll: countAll,
-    getHostNames: getHostNames
+    getHostNames: getHostNames,
+    deleteAllData: deleteAllData
 }
