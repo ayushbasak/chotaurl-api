@@ -1,9 +1,6 @@
 /**
  * Globals
  */
-const { ERROR_CREATION, ERROR_INVALID_URL,
-    ERROR_AUTHENTICATION, ERROR_INVALID_USER} = require('./errors/errors')
-
 const validURL = (url)=>{
    let regex = RegExp('^(ftp|https?)://', 'g')
    return regex.exec(url)
@@ -25,9 +22,6 @@ app.use(cors())
 app.listen(PORT, ()=>{
     console.log(`Server Open at PORT: ${PORT}`)
 })
-
-const { auth } = require('./database/config.database')
-const crud = require('./database/CRUD.database')
 
 /**
  * Admin Authentcation for maintainance privileges

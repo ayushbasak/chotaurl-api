@@ -1,6 +1,12 @@
 const express = require('express')
 const router = express.Router()
 
+const { auth } = require('./database/config.database')
+const crud = require('./database/CRUD.database')
+const { ERROR_CREATION, ERROR_INVALID_URL,
+    ERROR_AUTHENTICATION, ERROR_INVALID_USER} = require('./errors/errors')
+
+
 router.route('/')
 .get((req, res)=>{
         if(req.oidc.isAuthenticated())
@@ -22,6 +28,7 @@ router.route('/')
         const data = req.body
         const url = data.url
         const flavor = data.flavor
+        
         if(url === undefined){
             res.send(ERROR_INVALID_URL)
             return
