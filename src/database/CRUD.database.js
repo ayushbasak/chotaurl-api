@@ -89,8 +89,7 @@ const deleteAllData = async ()=>{
         truncate: true
     })
 }
-
-module.exports = {
+const crud = {
     insert: insert,
     insertCheck: insertCheck,
     findThis: findThis,
@@ -98,3 +97,4 @@ module.exports = {
     getHostNames: getHostNames,
     deleteAllData: deleteAllData
 }
+module.exports = crud
