@@ -1,11 +1,6 @@
 /**
  * Globals
  */
-const validURL = (url)=>{
-   let regex = RegExp('^(ftp|https?)://', 'g')
-   return regex.exec(url)
-}
-
 const PORT = process.env.PORT || 5000
 require('dotenv').config()
 const cors = require('cors')

@@ -6,6 +6,11 @@ const crud = require('../database/CRUD.database')
 const { ERROR_CREATION, ERROR_INVALID_URL,
     ERROR_AUTHENTICATION, ERROR_INVALID_USER} = require('../errors/errors')
 
+const validURL = (url)=>{
+   let regex = RegExp('^(ftp|https?)://', 'g')
+   return regex.exec(url)
+}
+
 
 router.route('/')
 .get((req, res)=>{
