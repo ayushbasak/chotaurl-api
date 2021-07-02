@@ -1,7 +1,7 @@
-const {Sequelize, DataTypes, Op} = require('sequelize')
-const sql = new Sequelize(process.env.DB_URI, {dialect: 'postgres'})
+const { db } = require('../config.database')
+const { DataTypes , Op } = require('sequelize')
 
-const urls = sql.define('urls', {
+const urls = db.define('urls', {
     id: {
         type: DataTypes.STRING,
         primaryKey: true
@@ -18,4 +18,4 @@ const urls = sql.define('urls', {
     tableName: 'urls',
     freezeTableName: true, timestamps: false})
 
-module.exports = {urls: urls, Op: Op}
+module.exports = { urls, Op}

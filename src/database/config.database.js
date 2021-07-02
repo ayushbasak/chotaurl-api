@@ -1,13 +1,13 @@
 const { Sequelize } = require('sequelize')
-const sql = new Sequelize(process.env.DB_URI, {dialect: 'postgres'})
+const db = new Sequelize(process.env.DB_URI, {dialect: 'postgres'})
 
-const auth = async ()=>{
+const databaseAuth = async ()=>{
     let res = false
-    await sql.authenticate()
+    await db.authenticate()
         .then(response => res = true)
         .catch(err => console.log(err))
 
     return res
 }
 
-module.exports = {auth: auth}
+module.exports = { db, databaseAuth }

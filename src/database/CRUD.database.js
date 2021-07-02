@@ -3,11 +3,12 @@ const { urls , Op} = require('./models/Urls.models')
 const insert = async (url)=>{
 
     //Randomly Choose to Delete old records
-    if(Math.floor(Math.random() * 10) === 1)
+    if(Math.random() < 0.1)
         await clearPrevious(7)
 
     const currTime = new Date().getTime()
     let newId = Math.random().toString(36).substring(2)
+
     await urls.create({
         id: newId,
         url: url,
@@ -22,11 +23,12 @@ const insert = async (url)=>{
 
 const insertCheck = async (url, flavor)=>{
     //Randomly Choose to Delete old records
-    if(Math.floor(Math.random() * 10) === 1)
+    if(Math.random() < 0.1)
         await clearPrevious(7)
 
     const currTime = new Date().getTime()
-    const exists = await findThis(flavor);
+    const exists = await findThis(flavor)
+
     if(exists !== undefined)
         return undefined;
     
@@ -90,11 +92,11 @@ const deleteAllData = async ()=>{
     })
 }
 const crud = {
-    insert: insert,
-    insertCheck: insertCheck,
-    findThis: findThis,
-    countAll: countAll,
-    getHostNames: getHostNames,
-    deleteAllData: deleteAllData
+    insert,
+    insertCheck,
+    findThis,
+    countAll,
+    getHostNames,
+    deleteAllData
 }
 module.exports = crud

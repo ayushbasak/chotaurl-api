@@ -1,10 +1,16 @@
 const express = require('express')
+const { requiresAuth } = require('express-openid-connect')
 const router = express.Router()
 
-const { auth } = require('../database/config.database')
+const { databaseAuth } = require('../database/config.database')
 const crud = require('../database/CRUD.database')
-const { ERROR_CREATION, ERROR_INVALID_URL,
-    ERROR_AUTHENTICATION, ERROR_INVALID_USER} = require('../errors/errors')
+const { 
+    ERROR_CREATION,
+    ERROR_INVALID_URL,
+    ERROR_AUTHENTICATION,
+    ERROR_INVALID_USER
+} = require('../errors/errors')
+
 
 const validURL = (url)=>{
    let regex = RegExp('^(ftp|https?)://', 'g')
@@ -15,12 +21,11 @@ const validURL = (url)=>{
 router.route('/')
 .get((req, res)=>{
         if(req.oidc.isAuthenticated())
-            res.send('visit /admin')
+            res.send('visit <a href = "/admin">/admin</a>')
         else{
             // Database Authentication
-            if(auth()){
-                console.log(`Database Connected`)
-                res.send('Database Connected')
+            if(databaseAuth()){
+                res.send(`Database Connected for ${req.socket.remoteAddress}`)
             }
             else{
                 res.send(`INVALID REQUEST`)
@@ -94,5 +99,11 @@ router.route('/admin')
         }
         else
             res.send(ERROR_AUTHENTICATION)
+    })
+
+router.route('/test')
+    .get(requiresAuth(), async (req, res)=>{
+        console.log(`test`)
+        res.send(`test`)
     })
 module.exports = router
