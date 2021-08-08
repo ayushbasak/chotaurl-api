@@ -67,7 +67,7 @@ router.route('/q/')
 
 router.route('/p/')
     .post(async (req, res)=>{
-        const currURL = req.protocol + '://' + req.get('host') + req.originalUrl
+        const currURL =  + 'https://' + req.get('host') + req.originalUrl
 
         const data = req.body
         const title = data.title
