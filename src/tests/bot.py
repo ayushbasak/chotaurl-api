@@ -6,7 +6,7 @@ import sys
 if(len(sys.argv) is not 2):
 	sys.exit()
 
-actionURL = 'https://ctlnk.herokuapp.com' if sys.argv[1] == 'prod' else 'http://localhost:5000'
+actionURL = 'https://ctlnk.herokuapp.com/q' if sys.argv[1] == 'prod' else 'http://localhost:5000'
 t0 = time.time()
 urls = []
 with open('urls.txt') as f:

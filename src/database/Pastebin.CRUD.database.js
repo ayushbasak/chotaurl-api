@@ -2,12 +2,8 @@ const { pastebin, Op } = require('./models/Pastebin.models');
 
 const insert = async (title, content, language)=>{
 
-    //Randomly Choose to Delete old records
-    if(Math.random() < 0.1)
-        await clearPrevious(7)
-
     const currTime = new Date().getTime()
-    let newId = Math.random().toString(36).substring(2)
+    let newId = Math.random().toString(36).substring(2,6)
 
     await pastebin.create({
         id: newId,
@@ -24,9 +20,7 @@ const insert = async (title, content, language)=>{
 }
 
 const insertCheck = async (title, content, language, flavor)=>{
-    //Randomly Choose to Delete old records
-    if(Math.random() < 0.1)
-        await clearPrevious(7)
+
 
     const currTime = new Date().getTime()
     const exists = await findThis(flavor)
@@ -82,6 +76,10 @@ const clearPrevious = async (days) =>{
 }
 
 const countAll = async ()=>{
+    //Randomly Choose to Delete old records
+    if(Math.random() < 0.1)
+        await clearPrevious(7)
+        
     let count = 0
     await pastebin.count()
         .then(response => count = response)
@@ -90,15 +88,6 @@ const countAll = async ()=>{
     return count
 }
 
-const getHostNames = async ()=>{
-    let hostNames = await pastebin.findAll()
-    let result = new Set()
-    hostNames.map(curr =>
-        result.add(curr.dataValues.url
-            .split("//")[1].split('/')[0]))
-    console.log(result)
-    return result
-}
 
 const deleteAllData = async ()=>{
     await pastebin.destroy({
@@ -111,7 +100,6 @@ const crud = {
     insertCheck,
     findThis,
     countAll,
-    getHostNames,
     deleteAllData
 }
 module.exports = crud

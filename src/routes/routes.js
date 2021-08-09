@@ -134,7 +134,7 @@ router.route('/about/p')
         })
     })
 
-router.route('/admin', requiresAuth)
+router.route('/admin', requiresAuth())
     .get(async (req, res)=>{
         if(req.oidc.isAuthenticated()){
             const user = req.oidc.user.sub.split('|')[1]

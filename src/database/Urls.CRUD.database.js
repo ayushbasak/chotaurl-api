@@ -2,12 +2,8 @@ const { urls , Op} = require('./models/Urls.models')
 
 const insert = async (url)=>{
 
-    //Randomly Choose to Delete old records
-    if(Math.random() < 0.1)
-        await clearPrevious(7)
-
     const currTime = new Date().getTime()
-    let newId = Math.random().toString(36).substring(2)
+    let newId = Math.random().toString(36).substring(2,6)
 
     await urls.create({
         id: newId,
@@ -22,9 +18,6 @@ const insert = async (url)=>{
 }
 
 const insertCheck = async (url, flavor)=>{
-    //Randomly Choose to Delete old records
-    if(Math.random() < 0.1)
-        await clearPrevious(7)
 
     const currTime = new Date().getTime()
     const exists = await findThis(flavor)
@@ -68,6 +61,9 @@ const clearPrevious = async (days) =>{
 }
 
 const countAll = async ()=>{
+    //Randomly Choose to Delete old records
+    if(Math.random() < 0.1)
+        await clearPrevious(7)
     let count = 0
     await urls.count()
         .then(response => count = response)
