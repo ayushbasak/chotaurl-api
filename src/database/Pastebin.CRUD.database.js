@@ -1,14 +1,19 @@
 const { pastebin, Op } = require('./models/Pastebin.models');
+const CryptoJs = require('crypto-js')
 
-const insert = async (title, content, language)=>{
+const insert = async (title, content, passcode)=>{
 
     const currTime = new Date().getTime()
     let newId = Math.random().toString(36).substring(2,6)
 
+    if(passcode !== ""){
+        content = CryptoJs.AES.encrypt(content, passcode).toString()
+    }
+
     await pastebin.create({
         id: newId,
         title: title === undefined ? "[NO TITLE]" : title,
-        language: language === undefined ? "TEXT" : language,
+        passcode: passcode,
         content: content,
         epoch: currTime
     })
@@ -17,29 +22,6 @@ const insert = async (title, content, language)=>{
             newId = undefined
         })
     return {endpoint: newId, epoch: currTime}
-}
-
-const insertCheck = async (title, content, language, flavor)=>{
-
-
-    const currTime = new Date().getTime()
-    const exists = await findThis(flavor)
-
-    if(exists !== undefined)
-        return undefined;
-    
-    await pastebin.create({
-        id: flavor,
-        title: title === undefined ? "" : title,
-        language: language === undefined ? "TEXT" : language,
-        content: content,
-        epoch: currTime
-    })
-        .catch(err =>{
-            console.log(err)
-            return undefined
-        })
-    return {endpoint: flavor, epoch: currTime}
 }
 
 const findThis= async (id)=>{
@@ -52,7 +34,6 @@ const findThis= async (id)=>{
         data = {
             title: data.dataValues.title,
             content: data.dataValues.content,
-            language: data.dataValues.language,
             epoch: data.dataValues.epoch
         }
         return data
@@ -97,7 +78,6 @@ const deleteAllData = async ()=>{
 
 const crud = {
     insert,
-    insertCheck,
     findThis,
     countAll,
     deleteAllData

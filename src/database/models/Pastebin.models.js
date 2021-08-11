@@ -13,9 +13,9 @@ const pastebin = db.define('pastebin', {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    language: {
-        type: DataTypes.STRING,
-        allowNull: false,
+    passcode: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
     },
     epoch: {
         type: DataTypes.BIGINT,

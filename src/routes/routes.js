@@ -67,27 +67,22 @@ router.route('/q/')
 
 router.route('/p/')
     .post(async (req, res)=>{
-        const currURL = 'https://' + req.get('host') + req.originalUrl
-
         const data = req.body
         const title = data.title
         const content = data.content
-        const language = data.language
-        const flavor = data.flavor
+        const passcode = data.passcode
 
-        let result = undefined
-        if(flavor === undefined)
-            result = await pastebinCRUD.insert(title, content, language)
-        else
-            result = await pastebinCRUD.insertCheck(title, content, language, flavor)
+        let result = await pastebinCRUD.insert(title, 
+                        content,
+                        passcode === undefined ? '' : passcode)
         
         if(result == undefined)
             res.json(ERROR_CREATION)
         else{
-            const endpoint = result.endpoint
-            result = await pastebinCRUD.findThis(result.endpoint)
-            result.url = currURL + endpoint
-            res.json(result)
+            output = await pastebinCRUD.findThis(result.endpoint)
+            output.passcode = passcode
+            output.code = result.endpoint
+            res.json(output)
         }
     })
 
