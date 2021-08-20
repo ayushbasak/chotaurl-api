@@ -1,4 +1,5 @@
-const { urls , Op} = require('./models/Urls.models')
+const { Op } = require('sequelize')
+const { urls } = require('./models/Urls.models')
 
 const insert = async (url)=>{
 
@@ -76,8 +77,8 @@ const getHostNames = async ()=>{
     let hostNames = await urls.findAll()
     let result = new Set()
     hostNames.map(curr =>
-        result.add(curr.dataValues.url
-            .split("//")[1].split('/')[0]))
+        result.add(curr.dataValues.url)
+    )
     console.log(result)
     return result
 }

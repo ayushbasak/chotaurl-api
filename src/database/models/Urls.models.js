@@ -1,5 +1,5 @@
 const { db } = require('../config.database')
-const { DataTypes , Op } = require('sequelize')
+const { DataTypes } = require('sequelize')
 
 const urls = db.define('urls', {
     id: {
@@ -18,4 +18,4 @@ const urls = db.define('urls', {
     tableName: 'urls',
     freezeTableName: true, timestamps: false})
 
-module.exports = { urls, Op}
+module.exports = { urls }

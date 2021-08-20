@@ -1,4 +1,5 @@
-const { pastebin, Op } = require('./models/Pastebin.models');
+const { Op } = require('sequelize') 
+const { pastebin } = require('./models/Pastebin.models');
 const CryptoJs = require('crypto-js')
 
 const insert = async (title, content, passcode)=>{

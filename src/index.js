@@ -24,9 +24,15 @@ app.listen(PORT, ()=>{
 const { auth0, config_auth0 } = require('./admin/admin.auth')
 app.use(auth0(config_auth0))
 
-const router = require('./routes/routes')
+const adminRouter = require('./routes/admin.routes')
+const pastebinRouter = require('./routes/pastebin.routes')
+const chotaurlRouter = require('./routes/chotaurl.routes')
+const aboutRouter = require('./routes/about.routes')
 /**
  * Routes
  */
 
-app.use('/', router)
+app.use('/', adminRouter)
+app.use('/p', pastebinRouter)
+app.use('/q', chotaurlRouter)
+app.use('/about', aboutRouter)

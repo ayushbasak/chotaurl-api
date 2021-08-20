@@ -1,5 +1,5 @@
 const { db } = require('../config.database')
-const { DataTypes , Op } = require('sequelize')
+const { DataTypes } = require('sequelize')
 
 const pastebin = db.define('pastebin', {
     id: {
@@ -27,4 +27,4 @@ const pastebin = db.define('pastebin', {
     freezeTableName: true,
 });
 
-module.exports = { pastebin , Op};
+module.exports = { pastebin };
