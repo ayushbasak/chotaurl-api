@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 
 const crud = require('../database/Urls.CRUD.database')
+const crud_metrics = require('../database/Url_metrics.CRUD.database')
 
 const { 
     ERROR_CREATION,
@@ -35,29 +36,39 @@ router.route('/')
         res.send(ERROR_INVALID_URL)
         return
     }
-    let result = undefined
-    if(flavor === undefined)
-        result = await crud.insert(url)
-    else
-        result = await crud.insertCheck(url, flavor)
-    
-    if(result == undefined)
-        res.json(ERROR_CREATION)
-    else{
-        data.shortenedURL = currURL + result.endpoint
-        data.epoch = result.epoch
-        res.json(data)
+
+    try {
+        let new_url = undefined
+        if(flavor === undefined)
+            new_url = await crud.insert(url)
+        else
+            new_url = await crud.insertCheck(url, flavor)
+        res.send({
+            url: currURL + new_url.endpoint,
+            epoch: new_url.epoch
+        })
+    } catch (err) {
+        ERROR_CREATION.message = err.message
+        res.send(ERROR_CREATION);
+        console.log('Error Happened: ', ERROR_CREATION);
     }
 })
 
 
 router.route('/:id')
     .get(async (req, res)=>{
-        const service = await crud.findThis(req.params.id)
-        if(service == undefined)
-            res.json(ERROR_INVALID_URL)
-        else{
-            res.redirect(service)
+        try {
+            const service = await crud.findThis(req.params.id);
+            if(service === null){
+                res.send(ERROR_INVALID_URL)
+                return
+            }
+            await crud.updateClicks(req.params.id);
+            await crud_metrics.clicked_url(req.params.id);
+            res.redirect(service.url);
+        } catch (err) {
+            ERROR_INVALID_URL.message = err.message;
+            res.json(ERROR_INVALID_URL);
         }
     })
 

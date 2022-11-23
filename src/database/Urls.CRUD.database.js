@@ -3,46 +3,84 @@ const { urls } = require('./models/Urls.models')
 
 const insert = async (url)=>{
 
-    const currTime = new Date().getTime()
-    let newId = Math.random().toString(36).substring(2,6)
-
-    await urls.create({
-        id: newId,
-        url: url,
-        epoch: currTime
-    })
-        .catch(err => {
-            console.log(err)
-            newId = undefined
+    
+    // await urls.create({
+    //     id: newId,
+    //     url: url,
+    //     epoch: currTime
+    // })
+    //     .catch(err => {
+    //         console.log(err)
+    //         newId = undefined
+    //     })
+    // return {endpoint: newId, epoch: currTime}
+    
+    try {
+        const currTime = new Date().getTime()
+        let newId = Math.random().toString(36).substring(2,6)
+        const new_url = await urls.create({
+            id: newId,
+            url: url,
+            epoch: currTime
         })
-    return {endpoint: newId, epoch: currTime}
+        return {
+            endpoint: new_url.dataValues.id,
+            epoch: new_url.dataValues.epoch
+        };
+    } catch (err) {
+        throw err;
+    }
+
 }
 
-const insertCheck = async (url, flavor)=>{
-
-    const currTime = new Date().getTime()
-    const exists = await findThis(flavor)
-
-    if(exists !== undefined)
-        return undefined;
-    
-    await urls.create({
-        id: flavor,
-        url: url,
-        epoch: currTime
-    })
-        .catch(err =>{
-            console.log(err)
-            return undefined
+const insertCheck = async (url, flavor)=>{    
+    try {
+        const currTime = new Date().getTime()
+        const exists = await findThis(flavor)
+        if (exists !== null) {
+            throw new Error("Flavor already exists");
+        }
+        const new_url = await urls.create({
+            id: flavor,
+            url: url,
+            epoch: currTime
         })
-    return {endpoint: flavor, epoch: currTime}
+
+        return {
+            endpoint: new_url.dataValues.id,
+            epoch: new_url.dataValues.epoch
+        };
+    } catch (err) {
+        throw err;
+    }
+
+    // if(exists !== undefined)
+    //     return undefined;
+    
+    // await urls.create({
+    //     id: flavor,
+    //     url: url,
+    //     epoch: currTime
+    // })
+    //     .catch(err =>{
+    //         console.log(err)
+    //         return undefined
+    //     })
+    // return {endpoint: flavor, epoch: currTime}
 }
 
 const findThis= async (id)=>{
-    let data = await urls.findOne({
-        where: {id: id}
-    })
-    return data ? data.dataValues.url : undefined
+    try {
+        let data = await urls.findOne({
+            where: {id: id}
+        })
+        if (data === null) {
+            return null;
+        }
+        return data;
+    } catch (err) {
+        throw err;
+    }
 }
 
 const clearPrevious = async (days) =>{
@@ -79,7 +117,7 @@ const getHostNames = async ()=>{
     hostNames.map(curr =>
         result.add(curr.dataValues.url)
     )
-    console.log(result)
+    // console.log(result)
     return result
 }
 
@@ -88,12 +126,36 @@ const deleteAllData = async ()=>{
         truncate: true
     })
 }
+
+const updateClicks = async (id) => {
+    try {
+        const currTime = new Date().getTime()
+        const url = await findThis(id)
+        if (url === null) {
+            throw new Error("URL does not exist");
+        }
+        // console.log(url);
+        await urls.update({
+            clicks: url.clicks + 1,
+        }, {
+            where: {
+                id: id
+            }
+        })
+
+        return url;
+    } catch (err) {
+        throw err;
+    }
+}
+
 const crud = {
     insert,
     insertCheck,
     findThis,
     countAll,
     getHostNames,
-    deleteAllData
+    deleteAllData,
+    updateClicks
 }
 module.exports = crud
