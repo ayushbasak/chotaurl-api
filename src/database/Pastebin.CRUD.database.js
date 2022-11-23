@@ -14,7 +14,6 @@ const insert = async (title, content, passcode)=>{
     await pastebin.create({
         id: newId,
         title: title === undefined ? "[NO TITLE]" : title,
-        passcode: passcode,
         content: content,
         epoch: currTime
     })

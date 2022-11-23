@@ -22,7 +22,7 @@ router.route('/')
             res.json(ERROR_CREATION)
         else{
             output = await crud.findThis(result.endpoint)
-            output.passcode = passcode
+            // output.passcode = passcode
             output.code = result.endpoint
             res.json(output)
         }

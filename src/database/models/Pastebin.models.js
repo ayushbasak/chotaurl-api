@@ -13,10 +13,6 @@ const pastebin = db.define('pastebin', {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    passcode: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-    },
     epoch: {
         type: DataTypes.BIGINT,
         allowNull: false
