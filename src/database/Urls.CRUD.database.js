@@ -87,16 +87,19 @@ const clearPrevious = async (days) =>{
     /**
      * Delete All records which are older than 'days' than current
      */
-
-    const currTime = new Date().getTime() - days * 86400 * 1000
-    await urls.destroy({
-        where: {
-            epoch : {
-                [Op.lt] : currTime
+    try {
+        const currTime = new Date().getTime() - days * 86400 * 1000
+        await urls.destroy({
+            where: {
+                epoch : {
+                    [Op.lt] : currTime
+                }
             }
-        }
-    })
-        .then(response => console.log(`deleted`))
+        })
+
+    } catch (err) {
+        throw err;
+    }
 }
 
 const countAll = async ()=>{
@@ -111,15 +114,15 @@ const countAll = async ()=>{
     return count
 }
 
-const getHostNames = async ()=>{
-    let hostNames = await urls.findAll()
-    let result = new Set()
-    hostNames.map(curr =>
-        result.add(curr.dataValues.url)
-    )
-    // console.log(result)
-    return result
-}
+// const getHostNames = async ()=>{
+//     let hostNames = await urls.findAll()
+//     let result = new Set()
+//     hostNames.map(curr =>
+//         result.add(curr.dataValues.url)
+//     )
+//     // console.log(result)
+//     return result
+// }
 
 const deleteAllData = async ()=>{
     await urls.destroy({
@@ -129,7 +132,6 @@ const deleteAllData = async ()=>{
 
 const updateClicks = async (id) => {
     try {
-        const currTime = new Date().getTime()
         const url = await findThis(id)
         if (url === null) {
             throw new Error("URL does not exist");
@@ -154,7 +156,6 @@ const crud = {
     insertCheck,
     findThis,
     countAll,
-    getHostNames,
     deleteAllData,
     updateClicks
 }

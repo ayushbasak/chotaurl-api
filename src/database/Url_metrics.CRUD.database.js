@@ -13,4 +13,17 @@ const clicked_url = async (url_id) => {
     }
 }
 
-module.exports = { clicked_url };
+const getMetrics = async (url_id) => {
+    try {
+        const metrics = await url_metrics.findAll({
+            where: {
+                url_id: url_id
+            }
+        });
+        return metrics;
+    } catch (err) {
+        throw err;
+    }
+}
+
+module.exports = { clicked_url, getMetrics };
