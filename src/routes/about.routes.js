@@ -4,7 +4,7 @@ const router = express.Router()
 const urlsCRUD = require('../database/Urls.CRUD.database')
 const url_metricsCRUD = require('../database/Url_metrics.CRUD.database');
 const pastebinCRUD = require('../database/Pastebin.CRUD.database')
-
+const pastebin_metricsCRUD = require('../database/Pastebin_metrics.CRUD.database')
 router.route('/q')
     .get( async (req, res)=>{
         let result =await  urlsCRUD.countAll()
@@ -36,6 +36,17 @@ router.route('/p')
         res.json({
             count: result
         })
+    })
+
+router.route('/p/:id')
+    .get( async (req, res)=>{
+        try {
+            let metrics = await pastebin_metricsCRUD.getMetrics(req.params.id);
+            res.send(metrics)
+        }
+        catch(err){
+            res.json(err);
+        }
     })
 
 module.exports = router

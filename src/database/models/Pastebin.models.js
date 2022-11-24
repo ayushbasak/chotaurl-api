@@ -16,6 +16,10 @@ const pastebin = db.define('pastebin', {
     epoch: {
         type: DataTypes.BIGINT,
         allowNull: false
+    },
+    fetches: {
+        type: DataTypes.BIGINT,
+        defaultValue: 0
     }
 }, {
     tableName: 'pastebin',

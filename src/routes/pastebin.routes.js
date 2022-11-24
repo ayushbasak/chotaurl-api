@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const crud = require('../database/Pastebin.CRUD.database')
+const crud_metrics = require('../database/Pastebin_metrics.CRUD.database')
 
 const { 
     ERROR_CREATION,
@@ -30,11 +31,17 @@ router.route('/')
 
 router.route('/:id')
     .get(async (req, res)=>{
-        const service = await crud.findThis(req.params.id)
-        if(service == undefined)
-            res.json(ERROR_INVALID_URL)
-        else{
+        try {
+            const service = await crud.findThis(req.params.id);
+            // if(service == undefined){
+            //     res.json(ERROR_CREATION)
+            //     return
+            // }
+            await crud.updateFetches(req.params.id)
+            await crud_metrics.fetch_pastebin(req.params.id)
             res.json(service)
+        } catch (err) {
+            res.json(ERROR_CREATION)
         }
     })
 

@@ -25,19 +25,35 @@ const insert = async (title, content, passcode)=>{
 }
 
 const findThis= async (id)=>{
-    let data = await pastebin.findOne({
-        where: {id: id}
-    })
-    if(!data)
-        return undefined
-    else{
-        data = {
-            title: data.dataValues.title,
-            content: data.dataValues.content,
-            epoch: data.dataValues.epoch
+    try {
+        const data = await pastebin.findOne({
+            where: {
+                id: id
+            }
+        });
+        const service = {
+            title: data.title,
+            content: data.content,
+            fetches: data.fetches,
         }
-        return data
+        return service;
+    } catch (err) {
+        console.log(err);
+        throw err;
     }
+    // let data = await pastebin.findOne({
+    //     where: {id: id}
+    // })
+    // if(!data)
+    //     return undefined
+    // else{
+    //     data = {
+    //         title: data.dataValues.title,
+    //         content: data.dataValues.content,
+    //         epoch: data.dataValues.epoch
+    //     }
+    //     return data
+    // }
 }
 
 const clearPrevious = async (days) =>{
@@ -76,10 +92,32 @@ const deleteAllData = async ()=>{
     })
 }
 
+const updateFetches = async (pastebin_id) => {
+    try {
+        const this_pastebin = await pastebin.findOne({
+            where: {
+                id: pastebin_id
+            }
+        });
+        await pastebin.update({
+            fetches: this_pastebin.fetches + 1
+        }, {
+            where: {
+                id: pastebin_id
+            }
+        });
+
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+}
+
 const crud = {
     insert,
     findThis,
     countAll,
-    deleteAllData
+    deleteAllData,
+    updateFetches
 }
 module.exports = crud
