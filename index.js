@@ -14,16 +14,16 @@ const app = express()
 app.use(express.json())
 app.use(cors())
 
-const { databaseAuth } = require('./database/config.database')
+const { databaseAuth } = require('./src/database/config.database')
 
 app.listen(PORT, ()=>{
     console.log(databaseAuth());
     console.log(`Server Open at PORT: ${PORT}`)
 })
 
-const pastebinRouter = require('./routes/pastebin.routes')
-const chotaurlRouter = require('./routes/chotaurl.routes')
-const aboutRouter = require('./routes/about.routes')
+const pastebinRouter = require('./src/routes/pastebin.routes')
+const chotaurlRouter = require('./src/routes/chotaurl.routes')
+const aboutRouter = require('./src/routes/about.routes')
 /**
  * Routes
  */
