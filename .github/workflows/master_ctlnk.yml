@@ -52,5 +52,5 @@ jobs:
         with:
           app-name: 'ctlnk'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_677E9D173BC544A4A2BA234BE7495FC4 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_BA13D0568E374006A354E5574F9DD662 }}
           package: .
